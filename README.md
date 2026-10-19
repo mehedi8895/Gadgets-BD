@@ -16,13 +16,11 @@ Responsive electronics storefront built with HTML5, CSS3 and vanilla JavaScript.
 
 ## Supabase project
 
-Project URL: `https://mrqaqppvqvytcromdigt.supabase.co`
-
-The browser URL and publishable key are configured in `config.js`. Publishable keys are designed for frontend use with RLS enabled. **Never add a Supabase secret/service-role key or payment gateway secret to GitHub or browser JavaScript.**
+A separate, dedicated Supabase project is still required for Gadgets BD. The currently connected Supabase account has a different app database, so `config.js` is intentionally left blank to avoid mixing customer accounts and tables between projects. Once a dedicated project is created, add its project URL and publishable key to `config.js`. Publishable keys are designed for frontend use with RLS enabled. **Never add a Supabase secret/service-role key or payment gateway secret to GitHub or browser JavaScript.**
 
 ### Database setup
 
-The SQL migration is `supabase/migrations/202610190001_gadgets_fullstack.sql`. Apply it to the linked Supabase project using the Supabase migration tool or SQL Editor, then verify the tables and policies. It creates the catalog, profiles, orders, order items, wishlists, admin roles, newsletter table, profile trigger, RLS policies, and `place_gadgets_order` RPC.
+The SQL migration is `supabase/migrations/202610190001_gadgets_fullstack.sql`. Apply it to the dedicated Gadgets BD Supabase project using the Supabase SQL Editor or migration workflow, then verify the tables, functions and policies. Do not apply it to another app’s database. It creates the catalog, profiles, orders, order items, wishlists, admin roles, newsletter table, profile trigger, RLS policies, and `place_gadgets_order` RPC.
 
 The migration inserts an **illustrative demo catalog** so the interface has data to render. Demo product names, prices, stock, images and warranty information must be reviewed and replaced before real sales.
 
