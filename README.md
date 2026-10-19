@@ -16,11 +16,11 @@ Responsive electronics storefront built with HTML5, CSS3 and vanilla JavaScript.
 
 ## Supabase project
 
-A separate, dedicated Supabase project is still required for Gadgets BD. The currently connected Supabase account has a different app database, so `config.js` is intentionally left blank to avoid mixing customer accounts and tables between projects. Once a dedicated project is created, add its project URL and publishable key to `config.js`. Publishable keys are designed for frontend use with RLS enabled. **Never add a Supabase secret/service-role key or payment gateway secret to GitHub or browser JavaScript.**
+A dedicated Supabase project has been created for Gadgets BD in the Mumbai (`ap-south-1`) region. `config.js` is connected to this project using the public publishable key. Publishable keys are designed for frontend use with RLS enabled. **Never add a Supabase secret/service-role key or payment gateway secret to GitHub or browser JavaScript.**
 
 ### Database setup
 
-The SQL migration is `supabase/migrations/202610190001_gadgets_fullstack.sql`. Apply it to the dedicated Gadgets BD Supabase project using the Supabase SQL Editor or migration workflow, then verify the tables, functions and policies. Do not apply it to another app’s database. It creates the catalog, profiles, orders, order items, wishlists, admin roles, newsletter table, profile trigger, RLS policies, and `place_gadgets_order` RPC.
+The initial SQL migration `supabase/migrations/202610190001_gadgets_fullstack.sql` and follow-up `supabase/migrations/202610190002_security_indexes.sql` are applied to the dedicated Gadgets BD Supabase project. The schema includes catalog, profiles, orders, order items, wishlists, admin roles, newsletter table, profile trigger, RLS policies, indexes and the `place_gadgets_order` RPC.
 
 The migration inserts an **illustrative demo catalog** so the interface has data to render. Demo product names, prices, stock, images and warranty information must be reviewed and replaced before real sales.
 
@@ -46,7 +46,7 @@ The migration inserts an **illustrative demo catalog** so the interface has data
 
 ## Deploy
 
-Deploy this static repository on Vercel, Netlify or GitHub Pages. Use the repository root as the static output. Configure a custom domain and the Supabase Auth redirect URLs after deployment. Vercel project creation from the connected integration previously returned a permission error, so live deployment has not been confirmed.
+Deploy this static repository on Vercel, Netlify or GitHub Pages. Use the repository root as the static output. Configure a custom domain and the Supabase Auth redirect URLs after deployment. Vercel deployment is still pending verification; do not treat the website as publicly launched until a deployment URL is confirmed.
 
 ## Verify before launch
 
