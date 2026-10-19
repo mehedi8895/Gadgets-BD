@@ -1,6 +1,3 @@
-// Public browser config only. Publishable keys are intended for client use with RLS enabled.
-// Never put service_role/secret keys or payment secrets here.
-window.GADGETS_BD_CONFIG = {
-  supabaseUrl: "https://mrqaqppvqvytcromdigt.supabase.co",
-  supabaseAnonKey: "sb_publishable_64Z97Zq7g8mVGIF3szoC9A_UTwQnFI3"
-};
+// Configure these values only for a dedicated Gadgets BD Supabase project.
+// Do not use another app project here. Never put service-role or secret keys in frontend code.
+window.GADGETS_BD_CONFIG = { supabaseUrl: "", supabaseAnonKey: "" };
