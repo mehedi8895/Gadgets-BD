@@ -86,16 +86,24 @@ async function refreshSession() {
    isAdmin = !!adminRow;
    $("#adminLink").hidden = !isAdmin; $("#modalAdminLink").hidden = !isAdmin;
    if (isAdmin) $("#authMessage").textContent += " Admin access is enabled.";
+   await loadMyOrders();
  } else {
    isAdmin = false;
    $("#authTitle").textContent = authMode === "signup" ? "Create account" : "Welcome back";
    $("#authHelp").textContent = "Sign in to place and track your orders.";
    $("#authNameWrap").hidden = authMode !== "signup"; $("#authEmail").closest("label").hidden = false; $("#authPassword").closest("label").hidden = false;
    $("#authSubmit").hidden = false; $("#toggleAuthMode").hidden = false; $("#signOut").hidden = true;
-   $("#adminLink").hidden = true; $("#modalAdminLink").hidden = true;
+   $("#adminLink").hidden = true; $("#modalAdminLink").hidden = true; $("#myOrders").hidden = true;
    $("#toggleAuthMode").textContent = authMode === "signin" ? "New here? Create an account" : "Already registered? Sign in";
    $("#authSubmit").textContent = authMode === "signin" ? "Sign in" : "Create account";
  }
+}
+async function loadMyOrders() {
+ if (!supabaseClient || !session) { $("#myOrders").hidden = true; return; }
+ $("#myOrders").hidden = false; $("#myOrdersList").innerHTML = '<p class="form-message">Loading your orders…</p>';
+ const {data,error}=await supabaseClient.from("orders").select("id,status,total,payment_status,created_at,order_items(product_name,quantity,line_total)").eq("user_id",session.user.id).order("created_at",{ascending:false}).limit(5);
+ if(error){$("#myOrdersList").innerHTML='<p class="form-message">Could not load orders right now.</p>';return;}
+ $("#myOrdersList").innerHTML=data.length?data.map(o=>`<article class="my-order"><div><strong>Order #${esc(o.id.slice(0,8).toUpperCase())}</strong><small>${new Date(o.created_at).toLocaleDateString()} · ${esc(o.status)} · ${esc(o.payment_status)}</small></div><b>${money(o.total)}</b><small>${(o.order_items||[]).map(i=>`${esc(i.product_name)} × ${i.quantity}`).join(", ")}</small></article>`).join(""):'<p class="form-message">No orders yet. Your orders will appear here after checkout.</p>';
 }
 async function submitAuth(event) {
  event.preventDefault();
@@ -131,6 +139,7 @@ async function submitOrder(event) {
      p_items: payload
    });
    if (error) throw error;
+   await supabaseClient.from("profiles").update({full_name:$("#checkoutName").value.trim(),phone:$("#checkoutPhone").value.trim(),address:$("#checkoutAddress").value.trim()}).eq("id",session.user.id);
    cart = []; persistCart(); closeModal("checkoutModal"); closeModal("authModal"); document.body.classList.remove("cart-open");
    $("#checkoutForm").reset(); toast("Order placed! Order ID: " + String(data).slice(0,8).toUpperCase());
    await loadProducts();
